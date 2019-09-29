@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
 
   html,
   body {
+    position: fixed;
     margin: 0;
     padding: 0;
     width: 100%;
