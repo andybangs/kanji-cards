@@ -16,9 +16,9 @@ export function useFlip(state) {
 export function useSwipe({ onSwipeLeft, onSwipeRight }) {
   const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }));
   const bindSwipe = useGesture(({ down, delta: [xDelta], direction: [xDir, yDir], velocity }) => {
-    const trigger = velocity > 0.2;
+    const trigger = velocity > 0.35;
     const dir = xDir < 0 ? -1 : 1;
-    const isSideSwipe = yDir > -0.85 && yDir < 0.85;
+    const isSideSwipe = yDir > -0.5 && yDir < 0.5;
     const isGone = !down && isSideSwipe && trigger;
 
     set(() => ({
