@@ -60,8 +60,9 @@ export function Front({ kanji }) {
 
 const BackCont = styled.div`
   display: block;
-  overflow: auto;
   padding: 1em;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 `;
 
 const Reading = styled.span`
