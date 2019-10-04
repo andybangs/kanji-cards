@@ -9,6 +9,7 @@ import { useFlip, useSwipe } from './hooks';
 const CardCont = styled(animated.div)`
   width: 50vh;
   height: 90vh;
+  cursor: pointer;
   will-change: transform;
 `;
 

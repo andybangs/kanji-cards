@@ -16,6 +16,7 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     width: 100%;
     height: 100%;
+    background: lightblue;
     user-select: none;
     overscroll-behavior-y: contain;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
@@ -27,11 +28,6 @@ const GlobalStyle = createGlobalStyle`
   div {
     width: 100%;
     height: 100%;
-  }
-
-  #root {
-    background: lightblue;
-    cursor: pointer;
   }
 `;
 
