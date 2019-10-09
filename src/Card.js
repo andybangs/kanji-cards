@@ -7,8 +7,8 @@ import { useFlip, useSwipe, useInterval } from './hooks';
 // Card
 
 const CardCont = styled(animated.div)`
-  width: 50vh;
-  height: 90vh;
+  width: 85vw;
+  height: 80vh;
   cursor: pointer;
   will-change: transform;
 `;
