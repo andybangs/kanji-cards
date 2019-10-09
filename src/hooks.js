@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSpring } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 
@@ -37,4 +37,25 @@ export function useSwipe({ onSwipeLeft, onSwipeRight }) {
   });
 
   return { x, y, bindSwipe };
+}
+
+// https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+export function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+
+    if (delay !== null) {
+      const id = setInterval(tick, delay);
+
+      return () => clearInterval(id);
+    }
+  }, [delay]);
 }

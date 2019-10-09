@@ -1,7 +1,7 @@
-import React from 'react';
-import { animated, interpolate } from 'react-spring';
+import React, { useState } from 'react';
+import { animated, config, interpolate, useSpring, useTransition } from 'react-spring';
 import styled from 'styled-components';
-import { useFlip, useSwipe } from './hooks';
+import { useFlip, useSwipe, useInterval } from './hooks';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Card
@@ -40,19 +40,17 @@ export function Card({ front, back, onSwipeLeft, onSwipeRight }) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Front
 
-const FrontCont = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const Kanji = styled.span`
   font-family: Mincho;
   font-size: 8em;
 `;
 
-export function Front({ kanji }) {
+export function Front({ kanji, hintVisible = false }) {
   return (
-    <FrontCont>
-      <span>{kanji}</span>
-    </FrontCont>
+    <React.Fragment>
+      <Kanji>{kanji}</Kanji>
+      {hintVisible && <FrontHint />}
+    </React.Fragment>
   );
 }
 
@@ -72,15 +70,18 @@ const Reading = styled.span`
   margin-bottom: 0.5em;
 `;
 
-export function Back({ english, onyomi, kunyomi, examples, ...levels }) {
+export function Back({ english, onyomi, kunyomi, examples, hintVisible = false, ...levels }) {
   return (
-    <BackCont>
-      <h1>{english}</h1>
-      {onyomi && <Reading>{onyomi}</Reading>}
-      {kunyomi && <Reading>{kunyomi}</Reading>}
-      {examples.length > 0 && <Examples examples={examples} />}
-      <KanjiLevel {...levels} />
-    </BackCont>
+    <React.Fragment>
+      <BackCont>
+        <h1>{english}</h1>
+        {onyomi && <Reading>{onyomi}</Reading>}
+        {kunyomi && <Reading>{kunyomi}</Reading>}
+        {examples.length > 0 && <Examples examples={examples} />}
+        <KanjiLevel {...levels} />
+      </BackCont>
+      {hintVisible && <BackHint />}
+    </React.Fragment>
   );
 }
 
@@ -130,5 +131,67 @@ function KanjiLevel({ jlpt, jouyou, frequency }) {
         )}
       </List>
     </React.Fragment>
+  );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Hints
+
+const HintCont = styled(animated.div)`
+  position: absolute;
+  bottom: 0;
+  height: 10%;
+  background: dimgrey;
+  color: white;
+  font-weight: 500;
+`;
+
+function FrontHint() {
+  const contStyle = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+    delay: 750,
+    config: config.stiff
+  });
+
+  const labelStyle = useSpring({
+    from: { opacity: 0, fontSize: '2em' },
+    to: { opacity: 1, fontSize: '1em' },
+    delay: 1000,
+    config: config.wobbly
+  });
+
+  return (
+    <HintCont style={contStyle}>
+      <animated.span style={labelStyle}>👆 Tap to flip</animated.span>
+    </HintCont>
+  );
+}
+
+function BackHint() {
+  const [toggle, setToggle] = useState(false);
+  const transitions = useTransition(toggle, null, {
+    from: { position: 'absolute', opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: config.molasses
+  });
+
+  useInterval(() => setToggle(!toggle), 3000);
+
+  return (
+    <HintCont>
+      {transitions.map(({ item, key, props }) =>
+        item ? (
+          <animated.span key={key} style={props}>
+            👈 Swipe to study again
+          </animated.span>
+        ) : (
+          <animated.span key={key} style={props}>
+            Swipe if you've learned it 👉
+          </animated.span>
+        )
+      )}
+    </HintCont>
   );
 }

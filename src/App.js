@@ -21,11 +21,13 @@ const Emoji = styled.span`
 export function App() {
   const appContStyle = useSpring({ to: { top: 0 }, from: { top: -1000 } });
   const [cardVisible, setCardVisible] = useState(true);
+  const [hintVisible, setHintVisible] = useState(true);
   const [reaction, setReaction] = useState('');
   const [card, setCard] = useState(sample(kyouiku));
   const { id, kanji, ...rest } = card;
 
   const handleSwipe = x => {
+    if (hintVisible) setHintVisible(false);
     setReaction(x < 0 ? getFailureEmoji() : getSuccessEmoji());
     setCardVisible(false);
     setCard(sample(kyouiku));
@@ -36,8 +38,8 @@ export function App() {
     <AppCont style={appContStyle}>
       {cardVisible ? (
         <Card
-          front={<Front kanji={kanji} />}
-          back={<Back {...rest} />}
+          front={<Front hintVisible={hintVisible} kanji={kanji} />}
+          back={<Back hintVisible={hintVisible} {...rest} />}
           onSwipeLeft={handleSwipe}
           onSwipeRight={handleSwipe}
         />
