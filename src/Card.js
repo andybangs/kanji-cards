@@ -164,7 +164,12 @@ function FrontHint() {
 
   return (
     <HintCont style={contStyle}>
-      <animated.span style={labelStyle}>👆 Tap to flip</animated.span>
+      <animated.span style={labelStyle}>
+        <span role="img" aria-hidden="true">
+          👆
+        </span>{' '}
+        Tap to flip
+      </animated.span>
     </HintCont>
   );
 }
@@ -185,11 +190,17 @@ function BackHint() {
       {transitions.map(({ item, key, props }) =>
         item ? (
           <animated.span key={key} style={props}>
-            👈 Swipe to study again
+            <span role="img" aria-label="left">
+              👈
+            </span>{' '}
+            Swipe to study again
           </animated.span>
         ) : (
           <animated.span key={key} style={props}>
-            Swipe if you've learned it 👉
+            Swipe if you've learned it{' '}
+            <span role="img" aria-label="right">
+              👉
+            </span>
           </animated.span>
         )
       )}
