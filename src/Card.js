@@ -26,7 +26,12 @@ export function Card({ front, back, onSwipeLeft, onSwipeRight }) {
 
   return (
     <CardCont
-      style={{ transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`) }}
+      style={{
+        transform: interpolate(
+          [x, y],
+          (x, y) => `translate3d(${x}px, ${y}px, 0) rotate(${x / 25}deg)`
+        )
+      }}
       onClick={() => setFlip(state => !state)}
       {...bindSwipe()}
     >

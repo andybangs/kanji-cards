@@ -15,14 +15,14 @@ export function useFlip(state) {
 
 export function useSwipe({ onSwipeLeft, onSwipeRight }) {
   const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }));
-  const bindSwipe = useDrag(({ down, movement: [xDelta], direction: [xDir, yDir], velocity }) => {
-    const trigger = velocity > 0.2;
+  const bindSwipe = useDrag(({ down, movement: [xDelta, yDelta], direction: [xDir] }) => {
+    const trigger = Math.abs(xDelta) > 100;
     const dir = xDir < 0 ? -1 : 1;
-    const isSideSwipe = yDir > -0.5 && yDir < 0.5;
-    const isGone = !down && isSideSwipe && trigger;
+    const isGone = !down && trigger;
 
     set(() => ({
-      x: isGone ? window.innerWidth * dir : down && isSideSwipe ? xDelta : 0,
+      x: isGone ? window.innerWidth * dir : down ? xDelta : 0,
+      y: down ? yDelta : 0,
       config: { friction: 50, tension: down ? 800 : isGone ? 250 : 500 },
       onFrame: () => {
         if (isGone && Math.abs(x.value) >= window.innerWidth / 1.5) {
