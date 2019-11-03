@@ -20,9 +20,11 @@ const Surface = styled(animated.div)`
   will-change: transform, opacity;
 `;
 
-export function Card({ front, back, onSwipeLeft, onSwipeRight }) {
+export function Card({ data, onSwipeLeft, onSwipeRight, hintVisible }) {
+  const { kanji, ...rest } = data;
   const { transform, opacity, setFlip } = useFlip(false);
   const { x, y, bindSwipe } = useSwipe({ onSwipeLeft, onSwipeRight });
+  const flip = () => setFlip(state => !state);
 
   return (
     <CardCont
@@ -32,12 +34,14 @@ export function Card({ front, back, onSwipeLeft, onSwipeRight }) {
           (x, y) => `translate3d(${x}px, ${y}px, 0) rotate(${x / 25}deg)`
         )
       }}
-      onClick={() => setFlip(state => !state)}
+      onClick={flip}
       {...bindSwipe()}
     >
-      <Surface style={{ opacity: opacity.interpolate(o => 1 - o), transform }}>{front}</Surface>
+      <Surface style={{ opacity: opacity.interpolate(o => 1 - o), transform }}>
+        <Front hintVisible={hintVisible} kanji={kanji} />
+      </Surface>
       <Surface style={{ opacity, transform: transform.interpolate(t => `${t} rotateY(180deg)`) }}>
-        {back}
+        <Back hintVisible={hintVisible} {...rest} />
       </Surface>
     </CardCont>
   );
@@ -51,7 +55,7 @@ const Kanji = styled.span`
   font-size: 8em;
 `;
 
-export function Front({ kanji, hintVisible = false }) {
+function Front({ hintVisible, kanji }) {
   return (
     <React.Fragment>
       <Kanji>{kanji}</Kanji>
@@ -76,7 +80,7 @@ const Reading = styled.span`
   margin-bottom: 0.5em;
 `;
 
-export function Back({ english, onyomi, kunyomi, examples, hintVisible = false, ...levels }) {
+function Back({ hintVisible, english, onyomi, kunyomi, examples, ...levels }) {
   return (
     <React.Fragment>
       <BackCont>
@@ -90,8 +94,6 @@ export function Back({ english, onyomi, kunyomi, examples, hintVisible = false, 
     </React.Fragment>
   );
 }
-
-// Private
 
 const List = styled.ul`
   padding-left: inherit;

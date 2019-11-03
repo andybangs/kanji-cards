@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { animated, useSpring } from 'react-spring';
-import { Card, Front, Back } from './Card';
+import { Card } from './Card';
 import styled from 'styled-components';
 import sample from 'lodash.sample';
 import { DISPLAY_INTERVAL } from './config';
@@ -24,7 +24,6 @@ export function App() {
   const [hintVisible, setHintVisible] = useState(true);
   const [reaction, setReaction] = useState('');
   const [card, setCard] = useState(sample(kyouiku));
-  const { id, kanji, ...rest } = card;
 
   const handleSwipe = x => {
     if (hintVisible) setHintVisible(false);
@@ -38,10 +37,10 @@ export function App() {
     <AppCont style={appContStyle}>
       {cardVisible ? (
         <Card
-          front={<Front hintVisible={hintVisible} kanji={kanji} />}
-          back={<Back hintVisible={hintVisible} {...rest} />}
+          data={card}
           onSwipeLeft={handleSwipe}
           onSwipeRight={handleSwipe}
+          hintVisible={hintVisible}
         />
       ) : (
         <Emoji>{reaction}</Emoji>
